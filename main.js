@@ -1,4 +1,6 @@
 var cubeRotation = 0.0;
+var tr = [];
+var xx = 0;
 
 main();
 
@@ -6,8 +8,7 @@ main();
 // Start here
 //
 
-var c;
-var c1;
+
 
 function main() {
 
@@ -16,8 +17,12 @@ function main() {
   const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 
   c = new cube(gl, [2, 5.0, -3]);
-  c1 = new cube(gl, [2, 5.0, -5.2]);
-  c2 = new cube(gl, [2, 5.0, -7.8]);
+  x = new train(gl,[2, 4.15, -9.0 ]);
+  y = new train(gl,[2.8, 4.15, -10.0 ]);
+  z = new train(gl,[1.2, 4.15, -11.0 ]);
+  tr.push(z);
+  tr.push(x);
+  tr.push(y);
   // If we don't have a GL context, give up now
 
   if (!gl) {
@@ -75,6 +80,34 @@ function main() {
   // Here's where we call the routine that builds all the
   // objects we'll be drawing.
   //const buffers
+    Mousetrap.bind('a', function () {
+     if(c.pos[0]==2){
+     c.pos[0]=2.5;
+     for(var i=0;i<tr.length;i++){
+       tr[i].pos[0]+=0.5;
+      }
+    }
+     else if(c.pos[0]==1.5){
+     c.pos[0]=2.0;
+     for(var i=0;i<tr.length;i++){
+       tr[i].pos[0]+=0.5;
+      }
+    }
+    });
+    Mousetrap.bind('d', function () {
+     if(c.pos[0]==2.5){
+     c.pos[0]=2.0;
+     for(var i=0;i<tr.length;i++){
+       tr[i].pos[0]-=0.5;
+      }
+    }
+    else if(c.pos[0]==2.0){
+     c.pos[0]=1.5;
+     for(var i=0;i<tr.length;i++){
+       tr[i].pos[0]-=0.5;
+      }
+    }
+    });
 
   var then = 0;
 
@@ -83,13 +116,16 @@ function main() {
     now *= 0.001;  // convert to seconds
     const deltaTime = now - then;
     then = now;
-
+    for(var i=0;i<tr.length;i++){
+      tr[i].pos[2]+=0.05;
+    }
     drawScene(gl, programInfo, deltaTime);
-
     requestAnimationFrame(render);
   }
   requestAnimationFrame(render);
 }
+
+
 
 //
 // Draw the scene.
@@ -114,7 +150,7 @@ function drawScene(gl, programInfo, deltaTime) {
   const fieldOfView = 45 * Math.PI / 180;   // in radians
   const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
   const zNear = 0.1;
-  const zFar = 150.0;
+  const zFar = 100.0;
   const projectionMatrix = mat4.create();
 
   // note: glmatrix.js always has the first argument
@@ -128,7 +164,7 @@ function drawScene(gl, programInfo, deltaTime) {
   // Set the drawing position to the "identity" point, which is
   // the center of the scene.
     var cameraMatrix = mat4.create();
-    mat4.translate(cameraMatrix, cameraMatrix, [2, 5, 0]);
+    mat4.translate(cameraMatrix, cameraMatrix, [2, 5.6, -0.5]);
     var cameraPosition = [
       cameraMatrix[12],
       cameraMatrix[13],
@@ -138,7 +174,6 @@ function drawScene(gl, programInfo, deltaTime) {
     var up = [0, 1, 0];
 
     mat4.lookAt(cameraMatrix, cameraPosition, c.pos, up);
-
     var viewMatrix = cameraMatrix;//mat4.create();
 
     //mat4.invert(viewMatrix, cameraMatrix);
@@ -148,8 +183,9 @@ function drawScene(gl, programInfo, deltaTime) {
     mat4.multiply(viewProjectionMatrix, projectionMatrix, viewMatrix);
 
   c.drawCube(gl, viewProjectionMatrix, programInfo, deltaTime);
-  c1.drawCube(gl, viewProjectionMatrix, programInfo, deltaTime);
-  c2.drawCube(gl, viewProjectionMatrix, programInfo, deltaTime);
+  for(var j=0;j<tr.length;j++){
+    tr[j].drawCube(gl, viewProjectionMatrix, programInfo, deltaTime);
+  }
 }
 
 //
