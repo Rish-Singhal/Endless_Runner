@@ -1,3 +1,5 @@
+
+
 /// <reference path="webgl.d.ts" />
 
 let train = class {
@@ -64,18 +66,7 @@ let train = class {
             // Repeat each color four times for the four vertices of the face
             colors = colors.concat(c, c, c, c);
         }
- const type = gl.FLOAT;
-            const normalize = false;
-            const stride = 0;
-            const offset = 0;
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer.position);
-            gl.vertexAttribPointer(
-                programInfo.attribLocations.vertexPosition,
-                numComponents,
-                type,
-                normalize,
-                stride,
-                offset);
+
         const colorBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
@@ -120,7 +111,7 @@ let train = class {
             this.pos
         );
         
-        //this.rotation += Math.PI / (((Math.random()) % 0.3) + 50);
+        //this.rotation += Math.PI / (((Math.random()) % 100) + 50);
 
         mat4.rotate(modelViewMatrix,
             modelViewMatrix,
