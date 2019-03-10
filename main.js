@@ -1,7 +1,8 @@
 var cubeRotation = 0.0;
 var tr = [];
 var xx = 0;
-
+var ply;
+var score = 0;
 main();
 
 //
@@ -9,20 +10,44 @@ main();
 //
 
 
-
 function main() {
 
-
+  document.getElementById('music').play();
   const canvas = document.querySelector('#glcanvas');
   const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 
   c = new cube(gl, [2, 5.0, -3]);
-  x = new train(gl,[2, 4.15, -9.0 ]);
+  ply = new player(gl, [2, 5.0, -1.6]);
+  x = new train(gl,[2, 4.15, -15.0 ]);
   y = new train(gl,[2.8, 4.15, -10.0 ]);
   z = new train(gl,[1.2, 4.15, -11.0 ]);
   tr.push(z);
   tr.push(x);
   tr.push(y);
+  b1 = -15.0
+  b2 = -10.0
+  b3 = -11.0
+  for (var i = 0  ; i <= 20; i += 1) {
+        var rand = (Math.random() * (10) - 5);
+         b1-=30.0
+         b2-=25.0
+         b3-=15.0
+        if (rand < 0) {
+           
+           pp = new train(gl,[2, 4.15, b1 ]);
+           tr.push(pp);
+          
+           pp = new train(gl,[2.8, 4.15, b2 ]);
+           tr.push(pp);
+        }
+        else {
+           pp = new train(gl,[2, 4.15, b1 ]);
+           tr.push(pp);
+           
+           pp = new train(gl,[1.2, 4.15, b3 ]);
+          tr.push(pp);
+        }
+    }
   // If we don't have a GL context, give up now
 
   if (!gl) {
@@ -83,12 +108,14 @@ function main() {
     Mousetrap.bind('a', function () {
      if(c.pos[0]==2){
      c.pos[0]=2.5;
+     ply.pos[0]=1.9;
      for(var i=0;i<tr.length;i++){
        tr[i].pos[0]+=0.5;
       }
     }
      else if(c.pos[0]==1.5){
      c.pos[0]=2.0;
+     ply.pos[0] = 2.0;
      for(var i=0;i<tr.length;i++){
        tr[i].pos[0]+=0.5;
       }
@@ -97,12 +124,14 @@ function main() {
     Mousetrap.bind('d', function () {
      if(c.pos[0]==2.5){
      c.pos[0]=2.0;
+     ply.pos[0] = 2.0;
      for(var i=0;i<tr.length;i++){
        tr[i].pos[0]-=0.5;
       }
     }
     else if(c.pos[0]==2.0){
      c.pos[0]=1.5;
+    ply.pos[0]=2.1;
      for(var i=0;i<tr.length;i++){
        tr[i].pos[0]-=0.5;
       }
@@ -110,12 +139,13 @@ function main() {
     });
 
   var then = 0;
-
   // Draw the scene repeatedly
   function render(now) {
     now *= 0.001;  // convert to seconds
     const deltaTime = now - then;
     then = now;
+    score += deltaTime;
+    $("#score").text("Score: " + (Math.round(score)));
     for(var i=0;i<tr.length;i++){
       tr[i].pos[2]+=0.05;
     }
@@ -183,6 +213,7 @@ function drawScene(gl, programInfo, deltaTime) {
     mat4.multiply(viewProjectionMatrix, projectionMatrix, viewMatrix);
 
   c.drawCube(gl, viewProjectionMatrix, programInfo, deltaTime);
+  ply.drawCube(gl, viewProjectionMatrix, programInfo, deltaTime);
   for(var j=0;j<tr.length;j++){
     tr[j].drawCube(gl, viewProjectionMatrix, programInfo, deltaTime);
   }

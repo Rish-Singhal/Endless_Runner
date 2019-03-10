@@ -3,17 +3,27 @@
   <head>
     <meta charset="utf-8">
     <title>WebGL Demo</title>
+     <link rel="stylesheet" href="bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="game.css" type="text/css">
     <link rel="stylesheet" href="../webgl.css" type="text/css">
   </head>
 
-  <body>
-    <canvas id="glcanvas" width="1280" height="720"></canvas>
+  <body align = "center">
+   <div class="container">
+    <div class="text-center">
+        <br><button type="button" id = "score" class="btn btn-primary btn-lg" >Score: 0</button><br><br>
+        <!--<button id="singlebutton" name="singlebutton" class="btn btn-primary">Next Step!</button>-->
+    </div>
+    <canvas id="glcanvas" width="1280" height="720">
+        <br></canvas>
+    <audio src = './sound.m4a' id = "music"></audio>
+  </div>  
   </body>
   <script src="./gl-matrix.js"></script>
-
   <script src="./cubeprime.js"></script>
   <script src="./jquery-3.3.1.min.js"></script>
   <script src="./train.js"></script>
+  <script src="./player.js"></script>
   <script src="./mousetrap.min.js"></script>
   <script src="./main.js"></script>
 </html>
