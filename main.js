@@ -8,7 +8,12 @@ main();
 //
 // Start here
 //
-
+function callDead() {
+    dead = true;
+    $("#canvasDiv").html("<h1>Game Over</h1>");
+    document.getElementById('music').pause();
+    document.getElementById('crash').play();
+}
 
 function main() {
 
@@ -20,6 +25,7 @@ function main() {
   ply = new player(gl, [2, 5.0, -1.6]);
   x = new train(gl,[2, 4.15, -15.0 ]);
   y = new train(gl,[2.8, 4.15, -10.0 ]);
+  pp = new train(gl,[2.8, 4.15, -10.0 ]);
   z = new train(gl,[1.2, 4.15, -11.0 ]);
   tr.push(z);
   tr.push(x);
@@ -146,9 +152,30 @@ function main() {
     then = now;
     score += deltaTime;
     $("#score").text("Score: " + (Math.round(score)));
-    for(var i=0;i<tr.length;i++){
-      tr[i].pos[2]+=0.05;
+    for(var j=0;j<tr.length;j++){
+       tr[j].pos[2]+=0.1;
+       if(ply.pos[0]==1.9 && tr[j].pos[0]==2.5){
+      //  console.log(tr[j].pos[2]);
+        // if(tr[j].pos[2]==-1.6){
+        //   callDead();
+        //   return;
+        // }
     }
+      if(ply.pos[0]==2.0 && tr[j].pos[0]==2){
+         if(tr[j].pos[2]<=-2.0 && tr[j].pos[2]>=-4.5){
+          callDead();
+          return;
+        }
+
+    }
+     if(ply.pos[0]==2.1 && tr[j].pos[0]==1.5){
+        // if(tr[j].pos[2]<=-1.5 && tr[j].pos[2]>=-3.5){
+        //   callDead();
+        //   return;
+        // }
+     }
+}
+    //pp.pos[2]+=0.09;
     drawScene(gl, programInfo, deltaTime);
     requestAnimationFrame(render);
   }
@@ -214,6 +241,7 @@ function drawScene(gl, programInfo, deltaTime) {
 
   c.drawCube(gl, viewProjectionMatrix, programInfo, deltaTime);
   ply.drawCube(gl, viewProjectionMatrix, programInfo, deltaTime);
+  pp.drawCube(gl, viewProjectionMatrix, programInfo, deltaTime);
   for(var j=0;j<tr.length;j++){
     tr[j].drawCube(gl, viewProjectionMatrix, programInfo, deltaTime);
   }
@@ -268,3 +296,4 @@ function loadShader(gl, type, source) {
 
   return shader;
 }
+
